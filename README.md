@@ -1,2 +1,2 @@
-# Minnistockmanager
+# Ministockmanager
 
