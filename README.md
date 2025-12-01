@@ -1,23 +1,24 @@
-# Ministockmanager
+## Ministockmanager
 
-Mini stock manager es un programa creado para la ayuda y facilitacion de crear un inventario para una tienda pequena o mini supermercado con el fin de llevar un registro detallado e actualizado de los productos de esta misma.Incluye un archivo .txt con el proposito de ver los productos sin necesidad de correr el programa y que el usuario lo pueda guardar donde guste.Desarollado exclusivamente utilizando **c++** sin ningun uso de IA como ChatGPT Gemini etc.
+Mini Stock Manager is a program created to help and simplify the process of managing the inventory of a small store or mini-market, allowing for a detailed and up-to-date record of its products. It includes a .txt file so the user can view the products without running the program and store this file wherever they prefer. Developed exclusively using C++, with no use of AI tools such as ChatGPT, Gemini, etc.
 
 ## Demo
 
-Tecnicamente nuestro codigo es una version muy temparana por esta razon no inlcuire una Demo.
-
+Technically, our code is still an early version, which is why a demo will not be included for now.
 
 ## Features
 
+Add product: A function that allows the user to add as many products as they want, along with the quantity and price of each.
 
-- Anadir producto: Funcion que permite al usuario ingrasar la cantidad de productos que desee, la cantidad del producto y el precio de estos.
-- Ver inventario: funcion creada para que el usuario vea los productos que tiene en el momento sin necesidad de agregar o editar estos mismos.
-- Editar un producto: funcion creada con el proposito de que el usuario pueda editar el precio de un o varios productos.
-- Salir: funcion echa para que el usuario abandone el programa cuando lo desee.
+View inventory: A function created so the user can view the current products without needing to add or edit anything.
+
+Edit a product: A function designed so the user can modify the price of one or multiple products.
+
+Exit: A function made so the user can leave the program whenever they wish.
 
 ## Tech
 
-fronted: c++
+C++
 
 ## License
 
