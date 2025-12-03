@@ -34,15 +34,15 @@ struct product {
 
 //Funcion para la creacion del producto --Jessed
 product createProduct() { //Crea una funcion (fabrica)
- product p; // crea un producto vacio
- cout << purple << "[+] Product name: " << reset; // Pide el nombre del producto 
- cin.ignore(numeric_limits<streamsize>::max(), '\n'); //Limpia el buffer
- getline(cin, p.productName); // le asigna un nombre al producto
- cout << blue << "[$] Price: "; // pide el precio del producto
- cin >> p.productPrice; // le asigna valor al producto
- cout << purple << "[#] Quantity: "; //pide el stock de el producto
- cin >> p.productQuantity; //asigna cantidad de productos en stock
- return p; // devuelve el producto lleno
+     product p; // crea un producto vacio
+     cout << purple << "[+] Product name: " << reset; // Pide el nombre del producto 
+     cin.ignore(numeric_limits<streamsize>::max(), '\n'); //Limpia el buffer
+     getline(cin, p.productName); // le asigna un nombre al producto
+     cout << blue << "[$] Price: "; // pide el precio del producto
+     cin >> p.productPrice; // le asigna valor al producto
+     cout << purple << "[#] Quantity: "; //pide el stock de el producto
+     cin >> p.productQuantity; //asigna cantidad de productos en stock
+     return p; // devuelve el producto lleno
 }
 
 int main() { //inicio del bloque de codigo principal
