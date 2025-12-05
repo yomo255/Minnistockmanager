@@ -1,5 +1,6 @@
-//librerias
+//librerías
 
+#include "color.h" //Libreria creada por mi para colorear la terminal usando ANSI color codes.
 #include <iostream> //Libreria para input, output stream
 #include <string> //libreria para variables tipo string y sus funciones
 #include <limits> //libreria que utilizamos para limpiar la cantidad maxima de una linea de el buffer
@@ -9,53 +10,53 @@
 #include <fstream> //Libreria que usamos para crear el archivo de texto.
 using namespace std; //Evita tener que escribir std al inicio de cada linea que forme parta de el standard.
 
-/*Voy a explicar aca como funciona esto para beneficio de mis teammates! 
-\033 es un escape code para la consola. En palabras simples, le dice a la computadora que mandaras un comando de color
-color (Ejemplo 35)
-Tipo de letra (Like Italic, Bold, Underline...) 1 (En este caso especifico, significa bold)
-'m' es el fin del comando
-para reiniciar el color a color base se utiliza \033[0m; */
-//Variables para cambiar el color utilizando ANSI color codes (Lo hago pa facilitarme la vida!!!!! crying face) --Jessed
-
-const string reset = "\033[0m"; //Reinicia el color
-const string red = "\033[1;31m"; //Color rojo
-const string green = "\033[1;32m"; //Color Verde
-const string purple = "\033[1;35m"; //Color Violeta
-const string blue = "\033[1;34m"; //Color Azul
-const string yellow = "\033[1;33m"; //Color amarillo
+//Variables globales
+int globalID = 1;
 
 //Estructura del producto --Jessed
-
 struct product {
     float productPrice; //Variable tipo float para el precio del producto
     int productQuantity; //Variable tipo Int para la cantidad de productos en stock.
     string productName; //Variable tipo String para el nombre del producto.
+    int productID; //Variable para crear el id del producto.
 }; //cierra la estructura (Siempre debe haber un ;)
 
-//Funcion para la creacion del producto --Jessed
-product createProduct() { //Crea una funcion (fabrica)
-     product p; // crea un producto vacio
-     cout << purple << "[+] Product name: " << reset; // Pide el nombre del producto 
-     cin.ignore(numeric_limits<streamsize>::max(), '\n'); //Limpia el buffer
-     getline(cin, p.productName); // le asigna un nombre al producto
-     cout << blue << "[$] Price: "; // pide el precio del producto
-     cin >> p.productPrice; // le asigna valor al producto
-     cout << purple << "[#] Quantity: "; //pide el stock de el producto
-     cin >> p.productQuantity; //asigna cantidad de productos en stock
-     return p; // devuelve el producto lleno
+//función para la creación del producto --Jessed
+product createProduct() { //Crea una función (fabrica)
+    product p; // crea un producto vacío
+    cout << purple << "[+] Product name: " << reset; // Pide el nombre del producto 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); //Limpia el buffer
+    getline(cin, p.productName); // le asigna un nombre al producto
+    cout << blue << "[$] Price: "; // pide el precio del producto
+    cin >> p.productPrice; // le asigna valor al producto
+    cout << purple << "[#] Quantity: "; //pide el stock de el producto
+    cin >> p.productQuantity; //asigna cantidad de productos en stock
+    cout << "Product ID: ";
+    p.productID = globalID; //Le asigna el valor de globalID a product ID.
+    globalID++;
+    cout << p.productID << "\n"; //Le asigna un ID unico.
+    return p; // devuelve el producto lleno
 }
 
-int main() { //inicio del bloque de codigo principal
+//Me cree esta funcion pa no estar repitiendo 5 lineas cada vez que quiera hacer una validacion de datos.
+void errorMessage() { //Void es basicamente que no tiene valor. En otras palabras un vacio.
+    cout << red << "\nInvalid Input\n" << reset;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return;
+}
+
+int main() { //inicio del bloque de código principal
 
 int menu;
-int numProducts; //Variable asignable a la cantidad de productos que seran creados
+int numProducts; //Variable asignable a la cantidad de productos que serán creados
 vector<product> inventory; //array de vectores para el inventario
-char confirm;//Variable tipo char utilizada para confirmar una accion.
+char confirm;//Variable tipo char utilizada para confirmar una acción.
 bool menuLoop = true; //Mantiene el loop funcionando hasta que este se apague.
 const int minStock = 0;
 
 //Menu -- Yomar
-//Uso de ANSI color codes en todo el codigo -- Jessed 
+//Uso de ANSI color codes en todo el código -- Jessed 
 while (menuLoop)
 {
     float totalInventory = 0.0;//variable asignable tipo float al valor total del inventario.
@@ -67,10 +68,8 @@ cout << "4. Exit\n" << reset;
 cout << blue <<  "========================================\n";
 cout << "Select an option: " << reset;
 
-if (!(cin >> menu)){//Valida si la opcion ingresada es valida.
-    cout << red << "Invalid option, please enter a number.\n\n";
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+if (!(cin >> menu)){//Valida si la opción ingresada es valida.
+    errorMessage();
     continue;
 }
 
@@ -85,50 +84,53 @@ case 1:
     cin >> numProducts;//Ingresa valor a numProducts
 
     if (numProducts <= minStock) {
-        cout << yellow << "You must create one or more products.\n\n" << reset; //Mensaje de error por si pone numeros negativos o ceroo
+        cout << yellow << "You must create one or more products.\n\n" << reset; //Mensaje de error por si pone números negativos o cero
         break;
     } else {
-    for (int i = 0; i < numProducts; i++) {//inicia ciclo for para la creacion de un producto
+    for (int i = 0; i < numProducts; i++) {//inicia ciclo for para la creación de un producto
         cout << green <<"\n--- Product #" << (i + 1) << "\n";
-        product p = createProduct();//Llama a la funcion anteriormente creada
+        product p = createProduct();//Llama a la función anteriormente creada
         inventory.push_back(p);//Ingresa el producto dentro de el inventario.
         cout << "Saved to inventory, current size: " << inventory.size() << "\n";//Imprime cuantos productos tiene el inventario en ese momento.
         }
     }
-
 
     break;
 
 case 2:
     //Inventario --Yomar, Jessed
     cout << blue << "\n=============== INVENTORY ==============\n\n" << reset;
-        cout << purple << left << setw(18) << "Product" << setw(10) << "Price" << setw(10) << "Stock"
+        cout << purple << left << setw(6) << "ID" << setw(18) << "Product" << setw(10) << "Price" << setw(10) << "Stock"
         << setw(12) << "Subtotal" << "\n" << reset;
-    for (product item : inventory) { //Inicia ciclo for para imprimir el inventario.
+    for (auto& item : inventory) { //Inicia ciclo for para imprimir el inventario.
     float subtotal = item.productPrice * item.productQuantity; //declara una variable tipo float para saber cuanto vale el stock de cada objeto.
-    cout << left << setw(18) << item.productName << setw(10) << fixed << setprecision(2) << item.productPrice
-         << setw(10) << item.productQuantity << setw(12) << fixed << setprecision(2) << subtotal << "\n" << reset; //Imprime el inventario
+    cout << left << setw(6) << item.productID << setw(18) << item.productName << setw(10) << fixed << setprecision(2) << item.productPrice
+    << setw(10) << item.productQuantity << setw(12) << fixed << setprecision(2) << subtotal << "\n" << reset; //Imprime el inventario
 
     totalInventory += subtotal;//Calcula el valor del inventario conjunto
     }
     cout << blue << "\nTOTAL INVENTORY VALUE: " << fixed << setprecision(2) << totalInventory << "$\n" << reset;//Imprime el valor del inventario conjunto
     
     cout << purple << "Do you want to [1] create an inventory file or [2] return to the main menu?\n" << reset;//Pregunta al usuario si desea guardar el inventario en un archivo de texto
-    cin >> menu;
+    
+    if (!(cin >> menu)) {
+        errorMessage();
+        continue;
+    }
 
     // Crear archivo txt que contenga el inventario -- Yomar
     if (menu == 1) {
         ofstream createFile("Inventory.txt"); //Abre el archivo!
-        if (!createFile) { //Esto basicamente es que si createFile = False, da un mensaje de error. La vdd nunca me ha dado error pero por si acaso!
+        if (!createFile) { //Esto básicamente es que si createFile = False, da un mensaje de error. La vdd nunca me ha dado error pero por si acaso!
             cout << red <<"Error creating file.\n" << reset; //Imprime un mensaje de error en caso de ocurrir un error a la hora de crear el archivo.
             break;
         }
-        createFile << left << setw(18) << "Product" << setw(10) << "Price"
+        createFile << left << setw(6) << "ID" << setw(18) << "Product" << setw(10) << "Price"
             << setw(10) << "Stock" << setw(12) << "Subtotal" << "\n";
-            for (product& item : inventory) {
+            for (auto& item : inventory) {
                 float subtotal = item.productPrice * item.productQuantity;
-                    createFile << left << setw(18) << item.productName << setw(10) << fixed << setprecision(2) << item.productPrice
-         << setw(10) << item.productQuantity << setw(12) << fixed << setprecision(2) << subtotal << "\n"; //Imprime el inventario
+                    createFile << left << setw(6) << item.productID << setw(18) << item.productName << setw(10) << fixed << setprecision(2) << item.productPrice
+            << setw(10) << item.productQuantity << setw(12) << fixed << setprecision(2) << subtotal << "\n"; //Imprime el inventario
             }
             createFile.close(); //Cierra el archivo (Sin esto no guarda el archivo asi que no lo toquen!!!)
             cout << green << "\nFile saved successfully!\n" << reset;
@@ -141,22 +143,24 @@ case 2:
 
     //Editar producto -- Gabriel
 case 3: {
-cout << green << "\n============= Edit Product =============\n" << reset;//Inicia la seccion de edicion de productos
+cout << green << "\n============= Edit Product =============\n" << reset;//Inicia la sección de edición de productos
 cout << blue << "Which product do you want to edit? (Enter the product name... ) \n" << reset;
-cout << yellow << "Disclaimer: Make sure to enter the product name exactly as it is written in the inventory.\n"; 
-cout << "Even a small change in capitalization will cause an error, since the system is case-sensitive.\n" << reset;
-cout << blue << "Product name: " ;
+cout << blue << "Product ID: ";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-string edit;
-getline(cin, edit);
+int edit;
+if (!(cin >> edit)) {
+    errorMessage();
+    continue;
+}
 bool searching = false;
+cout << reset;
 
-cout << "\nSEARCHING FOR "<<edit<<"...\n"; //flavor text
-for (auto& item : inventory) {if (item.productName == edit){searching=true;
-cout<< green <<"Found Product "<<item.productName<<"\n. Do you wish to edit ALL data? (Y/N): " << reset;
+cout << green << "\nSEARCHING FOR "<<edit<<"...\n"; //flavor text
+for (auto& item : inventory) {if (item.productID == edit){searching=true;
+cout<< green <<"Found Product "<<item.productName <<"!"<< "\n\nDo you wish to edit ALL data? (Y/N): " << reset;
 char all;
-cin>>all;//obv ps le da la opcion a borrar el producto entero o no 
-all = tolower(all); //tolower funciona para convertir la opcion seleccionada a minuscula.
+cin>>all;//obv ps le da la opción a borrar el producto entero o no 
+all = tolower(all); //tolower funciona para convertir la opción seleccionada a minúscula.
 
 if (all == 'y'){
     product edited = createProduct();
@@ -168,18 +172,27 @@ else if (all == 'n'){
     cout<< purple << "[+] Enter the new name for the product (or press the 'ENTER' key for the same name): " << reset;
     string namenuevo;
     cin.ignore();
-    getline (cin, namenuevo);
+    if (!(getline(cin,namenuevo))) {
+        errorMessage();
+        continue;
+    }
     if (!namenuevo.empty()) item.productName = namenuevo;
 
     cout<< blue <<"[$] Enter the new price for the product (or enter 0 to keep the same price): " << reset;
     float pricenuevi;
-    cin>>pricenuevi;
+    if (!(cin >> pricenuevi)) {
+        errorMessage();
+        continue;
+    }
     if (pricenuevi > 0) item.productPrice = pricenuevi;
 
     cout<< purple << "[#] Enter the quantity in stock for this new product (or type -1 for the same quantity): " << reset;
     //-1 para el mismo amount para que puedan entrar 0 (as in they have none)
     int amountnuez;
-    cin>>amountnuez;
+    if (!(cin >> amountnuez)) {
+        errorMessage();
+        continue;
+    }
     if (amountnuez>=0) item.productQuantity = amountnuez;
 cin.ignore(numeric_limits<streamsize>::max(), '\n'); //clear el buffer porsiaca
 }
@@ -193,14 +206,17 @@ if (!searching) {
     cout<< red <<"\nProduct not found.\n" << reset;}
     break; //este break es pal case como tal
 }
-// Opcion Exit -- Jessed
+// opción Exit -- Jessed
 case 4:
- // Confirmación de salida
+// Confirmación de salida
 while (menuLoop) {
     cout << yellow << "Do you really want to QUIT? (Y/N): " << reset;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin >> confirm;
-      confirm = tolower(confirm); //Tolower para convertir la letra seleccionada a minuscula.
+    if (!(cin >> confirm)) {
+        errorMessage();
+        continue;
+    }
+      confirm = tolower(confirm); //Tolower para convertir la letra seleccionada a minúscula.
     if (confirm == 'y') {
         cout << green << "\nThanks for using 'MiniStockManager', see you next time!\n\n" << reset;
         menuLoop = false;
@@ -209,19 +225,16 @@ while (menuLoop) {
         cout << yellow <<"Returning to the menu...\n\n" << reset; //Reinicia el loop y te devuelve al menu
         break;
     } else {
-        cout << red <<"Invalid input...\n\n" << reset; //En caso de que ponga una opcion que no sea valida. 
+        cout << red <<"Invalid input...\n\n" << reset; //En caso de que ponga una opción que no sea valida. 
         continue;
     }
 }
-
+//Si ingresa una opcion incorrecta
 default:
 if (menu >= 5) {
-cout << red << "Invalid option...\n\n" << reset; //Por si pone alguna opcion invalida
-cin.clear();
-cin.ignore(numeric_limits<streamsize>::max(), '\n');
+errorMessage();
     break;
         }
-
     }
 }
 return 0;
