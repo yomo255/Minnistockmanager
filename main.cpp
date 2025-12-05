@@ -1,6 +1,6 @@
 //librerías
 
-#include "color.h" //Libreria creada por mi para colorear la terminal usando ANSI color codes.
+#include "termicolor.h" //Libreria creada por mi para colorear la terminal usando ANSI color codes.
 #include <iostream> //Libreria para input, output stream
 #include <string> //libreria para variables tipo string y sus funciones
 #include <limits> //libreria que utilizamos para limpiar la cantidad maxima de una linea de el buffer
@@ -9,6 +9,7 @@
 #include <cctype> //libreria que utilizamos para la funcion tolower.
 #include <fstream> //Libreria que usamos para crear el archivo de texto.
 using namespace std; //Evita tener que escribir std al inicio de cada linea que forme parta de el standard.
+using namespace termicolor;//Evita tener que escribir termicolor para usar mi libreria
 
 //Variables globales
 int globalID = 1;
